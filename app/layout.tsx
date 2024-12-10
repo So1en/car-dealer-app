@@ -1,6 +1,11 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
+import Filters from '@/components/Filters';
+import { Suspense } from 'react';
+import FilterSkeleton from '@/components/FilterSkeleton';
+import { ErrorBoundary } from 'react-error-boundary';
+import Error from '@/app/erorr';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -26,9 +31,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
       >
-        {children}
+        <ErrorBoundary fallback={<Error />}>
+          <div className="container mx-auto">
+            <Suspense fallback={<FilterSkeleton />}>
+              <Filters />
+            </Suspense>
+            {children}
+          </div>
+        </ErrorBoundary>
       </body>
     </html>
   );
